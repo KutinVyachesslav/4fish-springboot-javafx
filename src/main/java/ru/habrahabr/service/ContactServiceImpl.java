@@ -7,6 +7,7 @@ import ru.habrahabr.repository.ContactRepository;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,8 +32,8 @@ public class ContactServiceImpl implements ContactService {
      */
     @PostConstruct
     public void generateTestData() {
-        save(new Contact("Иван Иванов", "+123456789", "ivan@ivan.ov"));
-        save(new Contact("Петр Петров", "+987654321", "petr@pe.tr"));
+        save(new Contact("Иван Иванов", "+123456789", "ivan@ivan.ov",new Date()));
+        save(new Contact("Петр Петров", "+987654321", "petr@pe.tr",new Date()));
     }
 
     @Override

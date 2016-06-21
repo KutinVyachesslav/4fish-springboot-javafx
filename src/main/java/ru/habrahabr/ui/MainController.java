@@ -3,6 +3,7 @@ package ru.habrahabr.ui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -14,6 +15,10 @@ import ru.habrahabr.entity.Contact;
 import ru.habrahabr.service.ContactService;
 
 import javax.annotation.PostConstruct;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +41,7 @@ public class MainController {
     @FXML private TextField txtName;
     @FXML private TextField txtPhone;
     @FXML private TextField txtEmail;
+    @FXML private DatePicker datePicker;
 
     // Variables
     private ObservableList<Contact> data;
@@ -79,7 +85,10 @@ public class MainController {
         TableColumn<Contact, String> emailColumn = new TableColumn<>("E-mail");
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-        table.getColumns().setAll(idColumn, nameColumn, phoneColumn, emailColumn);
+        TableColumn<Contact, Date> dataBirth = new TableColumn<>("Дата р.");
+        dataBirth.setCellValueFactory(new PropertyValueFactory<>("birth"));
+
+        table.getColumns().setAll(idColumn, nameColumn, phoneColumn, emailColumn,dataBirth);
 
         // Данные таблицы
         table.setItems(data);
@@ -91,7 +100,11 @@ public class MainController {
      */
     @FXML
     public void addContact() {
-        Contact contact = new Contact(txtName.getText(), txtPhone.getText(), txtEmail.getText());
+        LocalDate localDate = datePicker.getValue();
+        Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
+        Date date = Date.from(instant);
+
+        Contact contact = new Contact(txtName.getText(), txtPhone.getText(), txtEmail.getText(),date);
         contactService.save(contact);
         data.add(contact);
 
